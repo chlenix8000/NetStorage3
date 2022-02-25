@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane fx:controller="com.example.netstorage.ClientController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="399.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <ListView layoutX="289.0" layoutY="36.0" prefHeight="350.0" prefWidth="200.0" />
+        <Label fx:id="lblU" layoutX="14.0" layoutY="15.0" prefHeight="20.0" prefWidth="100.0" text="Username: " />
+        <Label fx:id="lblP" layoutX="14.0" layoutY="45.0" prefHeight="20.0" prefWidth="100.0" text="Password: " />
+        <TextField fx:id="log" layoutX="114.0" layoutY="13.0" text="Enter your username" onAction="#btnLogin"/>
+        <Button fx:id="logBtn" onAction="#btnLogin" layoutX="14.0" layoutY="73.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="250.0" text="LOGIN" />
+        <Label fx:id="lblSf" layoutX="289.0" layoutY="15.0" prefHeight="20.0" prefWidth="211.0" text="Stored files: " />
+        <Label fx:id="lblLs" layoutX="13.0" layoutY="102.0" prefHeight="25.0" prefWidth="250.0" text="Login successful" visible="false" />
+        <ProgressBar layoutX="15.0" layoutY="222.0" prefHeight="18.0" prefWidth="250.0" progress="0.0" visible="false"/>
+        <PasswordField fx:id="pass" layoutX="114.0" layoutY="43.0" text="Password" onAction="#btnLogin"/>
+        <Button fx:id="selBtn" layoutX="16.0" layoutY="246.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Select" />
+        <Button fx:id="uplBtn" layoutX="141.0" layoutY="246.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Upload" />
+        <ProgressBar layoutX="14.0" layoutY="309.0" prefHeight="18.0" prefWidth="250.0" progress="0.0" visible="false"/>
+        <Button fx:id="dwlBtn" layoutX="15.0" layoutY="333.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Download" />
+        <Button fx:id="delBtn" layoutX="140.0" layoutY="333.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Delete" />
+        <Label fx:id="lblCu" layoutX="15.0" layoutY="200.0" prefHeight="20.0" prefWidth="250.0" text="Choose a file to Upload" />
+        <Label fx:id="lblCd" layoutX="15.0" layoutY="289.0" prefHeight="20.0" prefWidth="250.0" text="Choose a file to Download" />
+    </children>
+</Pane>
