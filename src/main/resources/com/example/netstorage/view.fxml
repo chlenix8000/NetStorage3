@@ -11,11 +11,11 @@
         <TextField fx:id="log" layoutX="114.0" layoutY="13.0" text="Enter your username" onAction="#btnLogin"/>
         <Button fx:id="logBtn" onAction="#btnLogin" layoutX="14.0" layoutY="73.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="250.0" text="LOGIN" />
         <Label fx:id="lblSf" layoutX="289.0" layoutY="15.0" prefHeight="20.0" prefWidth="211.0" text="Stored files: " />
-        <Label fx:id="lblLs" layoutX="13.0" layoutY="102.0" prefHeight="25.0" prefWidth="250.0" text="Login successful" visible="false" />
+        <Label fx:id="ServerStatus" layoutX="13.0" layoutY="102.0" prefHeight="25.0" prefWidth="250.0" text="Нет подключения к серверу" visible="true" />
         <ProgressBar layoutX="15.0" layoutY="222.0" prefHeight="18.0" prefWidth="250.0" progress="0.0" visible="false"/>
         <PasswordField fx:id="pass" layoutX="114.0" layoutY="43.0" text="Password" onAction="#btnLogin"/>
-        <Button fx:id="selBtn" layoutX="16.0" layoutY="246.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Select" />
-        <Button fx:id="uplBtn" layoutX="141.0" layoutY="246.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Upload" />
+        <Button fx:id="selBtn" onAction="#selBtn" layoutX="16.0" layoutY="246.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Select" />
+        <Button fx:id="uplBtn" onAction="#uplBtn" layoutX="141.0" layoutY="246.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Upload" />
         <ProgressBar layoutX="14.0" layoutY="309.0" prefHeight="18.0" prefWidth="250.0" progress="0.0" visible="false"/>
         <Button fx:id="dwlBtn" layoutX="15.0" layoutY="333.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Download" />
         <Button fx:id="delBtn" layoutX="140.0" layoutY="333.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Delete" />

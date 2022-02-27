@@ -1,23 +1,41 @@
 package com.example.netstorage;
 
+import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.*;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.nio.NioEventLoopGroup;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
+import java.io.*;
+import java.net.Socket;
 
 public class ClientController {
     Bootstrap bootstrap = new Bootstrap();
     SocketChannel channel;
+    ClientHandler clientHandler;
+    ByteBuf sendBuf;
+
+    Socket socket;
+    DataInputStream in;
+    DataOutputStream out;
+
+    String fileInfo;
+    String filePath;
     String loginMsg;
+
     @FXML
     Button logBtn;
     @FXML
@@ -25,7 +43,7 @@ public class ClientController {
     @FXML
     PasswordField pass;
     @FXML
-    Label lblLs;
+    Label ServerStatus;
     @FXML
     Label lblU;
     @FXML
@@ -42,38 +60,21 @@ public class ClientController {
     Button selBtn;
     @FXML
     Button uplBtn;
+
     @FXML
-    public void initialize() {
+    public void initialize() throws IOException {
         setAuthorized(false);
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
-                try {
 
-                bootstrap.group(eventLoopGroup);
-                bootstrap.channel(NioSocketChannel.class);
-                bootstrap.handler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    public void initChannel(SocketChannel socketChannel) throws Exception {
-                        channel = socketChannel;
-                        ChannelPipeline pipeline = channel.pipeline();
-                        pipeline.addLast(new ClientHandler());
-
-                    }
-                });
-                ChannelFuture channelFuture = bootstrap.connect("localhost", 45001).sync();
-                channelFuture.channel().closeFuture().sync();}
-                catch (InterruptedException e){
-                    Thread.currentThread().interrupt();
-                }
-                finally {
-                    eventLoopGroup.shutdownGracefully();
-                }
-            }
-        });
-        t.start();
-//        t.setDaemon(true);
+        try {
+            socket = new Socket("localhost", 45002);
+            in = new DataInputStream(socket.getInputStream());
+            out = new DataOutputStream(socket.getOutputStream());
+            System.out.println("Подключение к серверу авторизации");
+            ServerStatus.setText("*Введите учетные данные");
+        } catch (IOException e) {
+            ServerStatus.setText("*Не удалось подключиться к серверу");
+            e.printStackTrace();
+        }
     }
 
     public void setAuthorized(boolean b) {
@@ -89,9 +90,8 @@ public class ClientController {
             delBtn.setVisible(true);
             selBtn.setVisible(true);
             uplBtn.setVisible(true);
-        }
-        else {
-            lblLs.setText("Введите логин и пароль");
+        } else {
+            ServerStatus.setText("Введите логин и пароль");
             lblU.setVisible(true);
             lblP.setVisible(true);
             pass.setVisible(true);
@@ -106,12 +106,101 @@ public class ClientController {
         }
     }
 
-    public void btnLogin(ActionEvent actionEvent) {
-            String loginMsg = new String("/auth " + log.getText() + " " + pass.getText());
-            System.out.println(loginMsg);
-            channel.writeAndFlush(loginMsg.getBytes(StandardCharsets.UTF_8));
-        System.out.println(channel.writeAndFlush(loginMsg));
-            log.clear();
-            pass.clear();
+    public void btnLogin(ActionEvent actionEvent) throws IOException {
+        setAuthorized(false);
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    String strFromServer = null;
+                    try {
+                        strFromServer = in.readUTF();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (strFromServer.startsWith("/authok")) {
+                        setAuthorized(true);
+                        String myNick = strFromServer.split("\\s")[1];
+                        ServerStatus.setText("*Вы авторизованы как: " + myNick);
+                        break;
+                    }
+                    else ServerStatus.setText("Неверный логин или пароль");
+                }
+                setAuthorized(true);
+
+                EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
+                try {
+                    bootstrap.group(eventLoopGroup);
+                    bootstrap.channel(NioSocketChannel.class);
+                    bootstrap.handler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        public void initChannel(SocketChannel socketChannel) throws Exception {
+                            channel = socketChannel;
+                            ChannelPipeline pipeline = channel.pipeline();
+                            pipeline.addLast(clientHandler = new ClientHandler());
+                        }
+                    });
+                    ChannelFuture channelFuture = bootstrap.connect("localhost", 45001).sync();
+                    channelFuture.channel().closeFuture().sync();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } finally {
+                    eventLoopGroup.shutdownGracefully();
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        out.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+
+            }
+        });
+        t.start();
+
+        String loginMsg = new String("/auth " + log.getText() + " " + pass.getText());
+        System.out.println(loginMsg);
+        out.writeUTF("/auth " + log.getText() + " " + pass.getText());
+
+        //Не получается передать данные авторизации String при помощи буффера(
+//            sendBuf.alloc().buffer();
+//            sendBuf.writeBytes(loginMsg.getBytes());
+//            System.out.println(sendBuf);
+//            channel.writeAndFlush(sendBuf);
+
+        log.clear();
+        pass.clear();
     }
+
+    public void selBtn(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        File selectedFile = fileChooser.showOpenDialog(null);
+        if (selectedFile != null) {
+            fileInfo = selectedFile.getName();
+            filePath = selectedFile.getAbsolutePath();
+            System.out.println(fileInfo);
+            System.out.println(filePath);
+        } else System.out.println("Выберите файл");
+    }
+
+    public void uplBtn(ActionEvent actionEvent) throws IOException {
+        out.writeUTF("/file " + fileInfo);
+        File file = new File(filePath);
+        channel.writeAndFlush(file);
+
+    }
+
+
+
 }

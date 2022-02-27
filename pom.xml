@@ -68,6 +68,11 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.36.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-handler</artifactId>
+            <version>4.1.72.Final</version>
+        </dependency>
 
 
     </dependencies>

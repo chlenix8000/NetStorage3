@@ -42,7 +42,6 @@
     <orderEntry type="library" name="Maven: io.netty:netty-codec-stomp:4.1.72.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-codec-xml:4.1.72.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.72.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.72.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-tcnative-classes:2.0.46.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-handler-proxy:4.1.72.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.72.Final" level="project" />
@@ -62,5 +61,6 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: io.netty:netty-resolver-dns-native-macos:osx-x86_64:4.1.72.Final" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: io.netty:netty-resolver-dns-native-macos:osx-aarch_64:4.1.72.Final" level="project" />
     <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.36.0.2" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.72.Final" level="project" />
   </component>
 </module>

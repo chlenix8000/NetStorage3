@@ -8,6 +8,7 @@ module com.example.netstorage {
     requires io.netty.transport;
     requires io.netty.buffer;
     requires java.sql;
+    requires io.netty.codec;
 
     opens com.example.netstorage to javafx.fxml;
     exports com.example.netstorage;

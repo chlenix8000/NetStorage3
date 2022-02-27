@@ -10,11 +10,10 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("Клиент подключен");
-        ByteBuf byteBuf = ctx.alloc().buffer();
-        byteBuf.writeBytes(new String("Введите логин и пароль").getBytes(StandardCharsets.UTF_8));
-        ctx.writeAndFlush(byteBuf);
-
+        System.out.println("Клиент подключился к серверу передачи данных");
+//        ByteBuf byteBuf = ctx.alloc().buffer();
+//        byteBuf.writeBytes(new String("Введите логин и пароль").getBytes(StandardCharsets.UTF_8));
+//        ctx.writeAndFlush(byteBuf);
     }
 
     @Override
